@@ -7,7 +7,7 @@ const proxy = require('http-proxy-middleware')
 const ReactDomServer = require('react-dom/server')
 const getTemplate = ()=>{
     return new Promise((resolve, reject)=>{
-        axios.get('http://localhost:9999/public/index.html')
+        axios.get('http://localhost:1234/public/index.html')
             .then((res)=>{
                 resolve(res.data)
             }).catch(reject)
@@ -40,12 +40,12 @@ serverCompiler.watch({},(err,stats)=>{
 
 module.exports = function(app){
     app.use('/public',proxy({
-        target:'http://127.0.0.1:9999'
+        target:'http://127.0.0.1:1234'
     }))
     app.get('*',function(req,res){
         getTemplate().then((template)=>{
             const content = ReactDomServer.renderToString(serverBundle)
-            res.send(template.replace('<-- app -->',content))
+            res.send(template.replace('<!-- app -->',content))
         })
     })
 }
