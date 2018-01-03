@@ -38,6 +38,9 @@ if (isDev) {
     publicPath: '/public/',
     historyApiFallback: {
       index: '/public/index.html'
+    },
+    proxy: {
+      '/api': 'http://127.0.0.1:2234'
     }
   }
   config.plugins.push(new webpack.HotModuleReplacementPlugin())
