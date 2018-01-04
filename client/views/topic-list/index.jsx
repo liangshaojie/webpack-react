@@ -6,7 +6,7 @@ import {
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { AppState } from "../../store/app-state";
-import App from "../App";
+import Button from 'material-ui/Button'
 
 @inject('appState') @observer
 export default class TopicList extends React.Component {
@@ -40,6 +40,7 @@ export default class TopicList extends React.Component {
           <title>this is toplist</title>
           <meta name="deacription" content="this is description" />
         </Helmet>
+        <Button raised color="primary">this is a button</Button>
         <input type="text" onChange={this.changeName}/>
         <span>{this.props.appState.msg}</span>
       </div>
