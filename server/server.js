@@ -1,11 +1,11 @@
 const express = require('express');
-const ReactSSR = require('react-dom/server');
 const fs = require('fs');
 const path = require('path');
 const favicon = require('serve-favicon')
 const isDev = process.env.NODE_ENV === 'development'
 const session =  require('express-session')
 const bodyParser = require('body-parser')
+const serverRender = require('./until/server-render')
 const app = express();
 
 app.use(bodyParser.json())
@@ -22,17 +22,20 @@ app.use('/api/user',require('./until/handle-login'))
 app.use('/api',require('./until/proxy'))
 
 if (!isDev) {
-  const serverEntry = require('../dist/server-entry').default;
-  const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8');
+  const serverEntry = require('../dist/server-entry')
+  const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8');
   app.use('/public', express.static(path.join(__dirname, '../dist')));
-  app.get("*", function (req, res) {
-    const appString = ReactSSR.renderToString(serverEntry)
-    res.send(template.replace('<!-- app -->', appString))
+  app.get("*", function (req, res,next) {
+    serverRender(serverEntry,template,req,res).catch(next)
   })
 } else {
   const devStatic = require('./until/dev-statice.js')
   devStatic(app)
 }
+app.use(function (err,req,res,next) {
+  console.log(err)
+  res.status(500).send(err)
+})
 
 app.listen(2234, function () {
   console.log("server is listening on 2234")
