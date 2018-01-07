@@ -37,6 +37,6 @@ app.use(function (err,req,res,next) {
   res.status(500).send(err)
 })
 
-app.listen(2234, function () {
-  console.log("server is listening on 2234")
+app.listen(3234, function () {
+  console.log("server is listening on 3234")
 })

@@ -18,6 +18,24 @@ const theme = createMuiTheme({
 
 // ReactDOM.hydrate(<App />,document.getElementById('root'));
 const initialState = window.__INITIAL__STATE__ || {}
+const createApp = (TheApp) => {
+  class Main extends React.Component {
+    componentDidMount() {
+      const jssStyles = document.getElementById('jss-server-side')
+      if (jssStyles && jssStyles.parentNode) {
+        jssStyles.parentNode.removeChild(jssStyles)
+      }
+    }
+    render() {
+      return <TheApp />
+    }
+  }
+
+  return Main
+}
+
+
+
 const root = document.getElementById('root')
 const render = (Component) => {
   ReactDOM.hydrate(
@@ -34,12 +52,12 @@ const render = (Component) => {
   )
 }
 
-render(App)
+render(createApp(App))
 
 if (module.hot) {
   module.hot.accept('./views/App', () => {
     const NextApp = requirt('./views/App').default //eslint-disable-line
-    render(NextApp)
+    render(createApp(NextApp))
     // ReactDOM.hydrate(<NextApp />,document.getElementById('root'));
   })
 }
